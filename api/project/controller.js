@@ -1,11 +1,12 @@
 import slug from 'slug';
-import { mkdir, rmdir } from 'node:fs/promises';
 import Projects from './model.js';
 
+import { mkdir, rmdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import fileDirName from '../utils/file-dir-name.js';
 
 const { __dirname } = fileDirName(import.meta);
-console.log(__dirname);
+const publicFolder = `${__dirname}/../../web/public`;
 
 export const getAll = async (req, res) => {
     try {
@@ -28,10 +29,17 @@ export const create = async (req, res) => {
         })
 
         const projects = await newProjects.save()
+
+        await mkdir(join(publicFolder, projects.slug), { recursive: true });
+
         await projects.populate('module');
         res.status(200).send(projects);
     } catch (error) {
-        res.status(500).send(error)
+        if (error.code === 11000) {
+            res.status(400).send({ message: 'Duplicated data, please review your input!' });
+        } else {
+            res.status(500).send(error);
+        }
     }
 }
 
@@ -55,7 +63,8 @@ export const remove = async (req, res) => {
     try {
         await Promise.all(
             req.body.map(async (v) => {
-                await Projects.findOneAndDelete({ _id: v._id })
+                const item = await Projects.findOneAndDelete({ _id: v._id });
+                await rmdir(join(publicFolder, item.slug), { recursive: true });
             })
         );
         res.status(200).send(req.body);
