@@ -1,12 +1,12 @@
 import slug from 'slug';
 import Projects from './model.js';
 
-import { mkdir, rmdir } from 'node:fs/promises';
+import { mkdir, rmdir, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 import fileDirName from '../utils/file-dir-name.js';
 
 const { __dirname } = fileDirName(import.meta);
-const publicFolder = `${__dirname}/../../web/public`;
+const publicFolder = `${__dirname}/../../web/public/digital-content`;
 
 export const getAll = async (req, res) => {
     try {
@@ -48,8 +48,11 @@ export const update = async (req, res) => {
         const { name } = req.body;
 
         const projects = await Projects.findById(req.params.id);
+        const oldPath = join(publicFolder, projects.slug);
 
         Object.assign(projects, { name, slug: slug(name) });
+        const newPath =  join(publicFolder, projects.slug);
+        await rename(oldPath, newPath);
 
         const item = await projects.save();
         await item.populate('module')
@@ -63,8 +66,10 @@ export const remove = async (req, res) => {
     try {
         await Promise.all(
             req.body.map(async (v) => {
-                const item = await Projects.findOneAndDelete({ _id: v._id });
+                const item = await Projects.findById(v._id);
                 await rmdir(join(publicFolder, item.slug), { recursive: true });
+
+                await Projects.findOneAndDelete({ _id: v._id });
             })
         );
         res.status(200).send(req.body);
