@@ -84,7 +84,7 @@ const submit = async () => {
               <UButton
                 color="gray"
                 variant="link"
-                :icon="typePassword ? 'i-heroicons-eye' : 'i-heroicons-eye-slash'"
+                :icon="typePassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
                 :padded="false"
                 @click="togglePassword()"
               />
