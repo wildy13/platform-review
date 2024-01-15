@@ -18,7 +18,7 @@ const menuItems = [
 ];
 
 const dropdownItems = [
-    { to: '', text: 'Category' },
+    { to: '/category', text: 'Category' },
     { to: '', text: 'Module' },
     { to: '', text: 'Content' },
 ];
@@ -58,6 +58,10 @@ const dropdownItems = [
                         </ul>
                     </div>
                 </div>
+                <nuxtLink class="flex items-center space-x-4 hover:bg-primary-50 group">
+                    <UIcon name="i-solar-chat-dots-bold" class="w-8 h-8 text-primary-600 group-hover:text-primary-900" />
+                    <span>Chat</span>
+                </nuxtLink>
             </div>
             <UButton variant="ghost" @click="logout()">
                 <div class="flex items-center space-x-4 ">
