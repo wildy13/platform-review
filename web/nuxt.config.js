@@ -13,6 +13,9 @@ export default defineNuxtConfig({
     },
   },
 
+  colorMode: {
+    preference: 'light',
+  },
   devtools: { enabled: true },
   css: [
     '@/assets/css/tailwind.css',
@@ -21,6 +24,7 @@ export default defineNuxtConfig({
     icons: ['solar'],
   },
 
+  
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',

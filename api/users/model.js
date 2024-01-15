@@ -7,7 +7,7 @@ const schema = new Schema({
   username: String,
   email: { type: String, unique: true, dropDups: true },
   password: { type: String, bcrypt: true },
-  role: { type: String },
+  role: { type: String, ref:'Roles' },
 }, { timestamps: true });
 
 schema.virtual('profile').get(function profile() {
