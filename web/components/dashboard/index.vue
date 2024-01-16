@@ -1,15 +1,17 @@
 <script setup>
 import { useRolesStore } from '../../stores/roles';
 import { useUsersStore } from '../../stores/users';
+import { useProjectStore } from '../../stores/projects.js'
 
 const roles = useRolesStore();
 const users = useUsersStore();
+const project = useProjectStore();
 
 const {
     pending,
     error,
     execute,
-} = useLazyAsyncData(() => Promise.all([roles.getAll(), users.getAll()]), {
+} = useLazyAsyncData(() => Promise.all([roles.getAll(), users.getAll(), project.getAll()]), {
     immediate: false,
 });
 
@@ -44,7 +46,7 @@ onMounted(async () => {
             <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between drop-shadow-xl">
                 <div class="flex flex-col space-y-4">
                     <div class="text-base font-semibold">PROJECT SUMMARY</div>
-                    <div class="text-xl">5</div>
+                    <div class="text-xl">{{ project.items.length }}</div>
                 </div>
                 <div class="self-center">
                     <UIcon name="i-solar-folder-2-bold" class="w-12 h-12" />

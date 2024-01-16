@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const store = useProjectStore();
+const project = useProjectStore();
 const toast = useToast();
 
 const isOpen = ref(false);

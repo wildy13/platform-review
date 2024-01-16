@@ -1,6 +1,6 @@
 <script setup>
 import { z } from 'zod';
-import { useProjectStore } from '../../stores/projects';
+import { useModuleStore } from '../../stores/module';
 
 const props = defineProps({
   show: {
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const store = useProjectStore();
+const store = useModuleStore();
 const toast = useToast();
 
 const isOpen = ref(false);
@@ -83,7 +83,7 @@ const submit = async () => {
           <template #header>
             <div class="flex items-center justify-between">
               <div class="text-base">
-                Edit Project
+                Edit Module
               </div>
               <UButton
                 color="gray"
