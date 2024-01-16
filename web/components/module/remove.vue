@@ -13,7 +13,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['close']);
 
-const store = useProjectStore();
+const store = useModuleStore();
 const toast = useToast();
 
 const isOpen = ref(false);

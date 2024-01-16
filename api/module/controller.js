@@ -114,11 +114,19 @@ export const update = async (req, res) => {
 };
 
 export const remove = async (req, res) => {
+
   try {
     await Promise.all(
       req.body.map(async (v) => {
-        const item = await Modules.findOneAndDelete({ _id: v._id });
-        await rmdir(join(publicFolder, item.slug), { recursive: true });
+        const item = await Modules.findById(v._id);
+
+        const prjt  =  await Project.findById(item.project);
+        await prjt.updateOne({ $pull: { module: item._id } });
+
+        await rmdir(join(publicFolder, prjt.name, item.slug), { recursive: true });
+
+        await Modules.findOneAndDelete({ _id: v._id }); 
+        
       })
     );
     res.status(200).send(req.body);

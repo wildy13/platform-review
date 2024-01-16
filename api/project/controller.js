@@ -64,6 +64,8 @@ export const update = async (req, res) => {
 
 export const remove = async (req, res) => {
     try {
+        
+    console.log('test')
         await Promise.all(
             req.body.map(async (v) => {
                 const item = await Projects.findById(v._id);
