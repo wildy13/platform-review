@@ -20,7 +20,7 @@ const menuItems = [
 const dropdownItems = [
     { to: '/category', text: 'Category' },
     { to: '/module', text: 'Module' },
-    { to: '', text: 'Content' },
+    { to: '/content', text: 'Content' },
 ];
 </script>
 
