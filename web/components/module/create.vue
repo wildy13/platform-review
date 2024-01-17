@@ -49,6 +49,18 @@ const {
   immediate: false,
 });
 
+const {
+  status : sts,
+  error : err,
+  execute: exct,
+} = useLazyAsyncData(() => Promise.all([project.getAll(), users.getAll()]), {
+  immediate: false,
+});
+
+onMounted(async () => {
+    await exct();
+});
+
 const currentProject = computed(() => project.items.find((v) => v._id === state.value.project));
 const currentSignTo = computed(() => users.items.find((v) => v._id === state.value.signTo));
 const currentSignBy = computed(() => users.items.find((v) => v._id === state.value.signBy));

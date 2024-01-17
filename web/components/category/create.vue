@@ -34,7 +34,7 @@ const {
   status,
   error,
   execute,
-} = useLazyAsyncData(() => store.create(state.value), {
+} = useLazyAsyncData(() => project.create(state.value), {
   immediate: false,
 });
 
