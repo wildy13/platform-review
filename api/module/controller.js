@@ -5,7 +5,6 @@ import Project from "../project/model.js";
 import { mkdir, rmdir, rename } from "node:fs/promises";
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
-import { renameSync } from "node:fs";
 
 const { __dirname } = fileDirName(import.meta);
 const publicFolder = `${__dirname}/../../web/public/digital-content`;
@@ -97,10 +96,9 @@ export const update = async (req, res) => {
     const oldPath = join(publicFolder, prjt.slug, modules.slug);
 
     Object.assign(modules, { name, slug: slug(name) });
-    const mdl = slug(name);
 
-    const newPath = join(publicFolder, prjt.slug, mdl);
-    await renameSync(oldPath, newPath);
+    const newPath = join(publicFolder, prjt.slug, slug(name));
+    await rename(oldPath, newPath);
     
     const item = await modules.save();
     await item.populate("project");
@@ -119,11 +117,11 @@ export const remove = async (req, res) => {
     await Promise.all(
       req.body.map(async (v) => {
         const item = await Modules.findById(v._id);
+        const project  =  await Project.findById(item.project);
+        await project.module.pull(item._id);
+        await project.save();
 
-        const prjt  =  await Project.findById(item.project);
-        await prjt.updateOne({ $pull: { module: item._id } });
-
-        await rmdir(join(publicFolder, prjt.name, item.slug), { recursive: true });
+        await rmdir(join(publicFolder, project.slug, item.slug), { recursive: true });
 
         await Modules.findOneAndDelete({ _id: v._id }); 
         
