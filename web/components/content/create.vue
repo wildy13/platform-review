@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { useModuleStore } from '../../stores/module';
 import { useContentStore } from '../../stores/content';
+import { useProjectStore } from '../../stores/projects'
 
 const props = defineProps({
   show: {
@@ -14,6 +15,8 @@ const emit = defineEmits(['close']);
 
 const module = useModuleStore();
 const content = useContentStore();
+const project = useProjectStore();
+
 
 const toast = useToast();
 
@@ -22,7 +25,7 @@ const form = ref();
 
 const initState = {
   name: undefined,
-  module: undefined
+  project: undefined,
 };
 const state = ref({ ...initState });
 
@@ -47,11 +50,13 @@ const {
   status: sts,
   error: err,
   execute: exct,
-} = useLazyAsyncData(() => module.getAll(), {
+} = useLazyAsyncData(() => Promise.all([module.getAll(), project.getAll()]), {
   immediate: false,
 });
 
-const current = computed(() => module.items.find((v) => v._id === state.value.module));
+
+const currentProject = computed(() => project.items.find((v) => v._id === state.value.project));
+const currentModule = computed(() => module.items.find((v) => v._id === state.value.module));
 
 const close = () => {
   Object.assign(state.value, initState);
@@ -95,11 +100,19 @@ const submit = async () => {
 
           <div class="flex flex-col space-y-[2rem]">
             <ErrorHandler v-if="error" :error="error?.message" />
-            <UFormGroup label="Module" name="module">
-              <USelectMenu v-model="state.module" :options="module.items" size="lg" value-attribute="_id"
+            <UFormGroup label="Project" name="project">
+              <USelectMenu v-model="state.project" :options="project.items" size="lg" value-attribute="_id"
                 option-attribute="name" searchable>
                 <template #label>
-                  {{ current?.name || 'Select...' }}
+                  {{ currentProject?.name || 'Select...' }}
+                </template>
+              </USelectMenu>
+            </UFormGroup>
+            <UFormGroup label="Module" name="module">
+              <USelectMenu clear-search-on-close v-model="state.module" :options="currentProject?.module" size="lg" value-attribute="_id"
+                option-attribute="name" searchable>
+                <template #label>
+                  {{ currentModule?.name|| 'Select...' }}
                 </template>
               </USelectMenu>
             </UFormGroup>

@@ -4,6 +4,8 @@ import { useProjectStore } from '../../stores/projects';
 import { useModuleStore } from '../../stores/module';
 import { useUsersStore } from '../../stores/users';
 
+const { data } = useAuth();
+
 const props = defineProps({
   show: {
     type: Boolean,
@@ -26,7 +28,7 @@ const initState = {
   name: undefined,
   project: undefined,
   signTo: undefined,
-  signBy: undefined
+  signBy: data.value.user._id
 };
 const state = ref({ ...initState });
 
@@ -50,15 +52,15 @@ const {
 });
 
 const {
-  status : sts,
-  error : err,
+  status: sts,
+  error: err,
   execute: exct,
 } = useLazyAsyncData(() => Promise.all([project.getAll(), users.getAll()]), {
   immediate: false,
 });
 
 onMounted(async () => {
-    await exct();
+  await exct();
 });
 
 const currentProject = computed(() => project.items.find((v) => v._id === state.value.project));
@@ -126,7 +128,7 @@ const submit = async () => {
             </UFormGroup>
             <UFormGroup label="Assignment By" name="signBy">
               <USelectMenu v-model="state.signBy" :options="users.items" size="lg" value-attribute="_id"
-                option-attribute="username" searchable>
+                option-attribute="username" searchable disabled>
                 <template #label>
                   {{ currentSignBy?.username || 'Select...' }}
                 </template>
