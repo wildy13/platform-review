@@ -12,7 +12,12 @@ const publicFolder = `${__dirname}/../../web/public/digital-content`;
 
 export const getAll = async (req, res) => {
     try {
-        const content = await Content.find({}).populate('module')
+        const content = await Content.find({}).populate({
+            path: "module",
+            populate: {
+                path: "project"
+            }
+        })
         res.status(200).send(content);
     } catch (error) {
         res.status(500).send(error);
@@ -32,7 +37,12 @@ export const create = async (req, res) => {
         })
 
         const content = await newContent.save()
-        await content.populate('module');
+        await content.populate({
+            path: "module",
+            populate: {
+                path: "project"
+            }
+        });
 
         const modules = await Modules.findById(module);
         const project = await Project.findById(modules.project);
@@ -65,7 +75,12 @@ export const update = async (req, res) => {
         Object.assign(content, { name, slug: slug(name) });
 
         const item = await content.save();
-        await item.populate('module')
+        await item.populate({
+            path: "module",
+            populate: {
+                path: "project"
+            }
+        })
         res.status(200).send(item);
     } catch (error) {
         res.status(500).send(error)
