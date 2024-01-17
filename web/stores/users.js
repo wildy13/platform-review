@@ -27,7 +27,6 @@ export const useUsersStore = defineStore('users', () => {
 
   async function getAll() {
     const res = await alovaInstance.Get('/api/users').send();
-    console.log(res)
     this.items = res;
 
     return res;
