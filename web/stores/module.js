@@ -33,7 +33,19 @@ export const useModuleStore = defineStore('module', () => {
   }
 
   async function create(body) {
-    const res = await alovaInstance.Post('/api/module/', body, { headers }).send();
+    const {
+      landingPage, ...rest
+    } = body;
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(rest));
+    formData.append('landingPage', landingPage);
+
+    const res = await alovaInstance.Post('/api/module/', formData, {
+      headers: {
+        Authorization: token.value,
+      },
+      enableUpload: true,
+    }).send();
     this.items.push(res);
 
     return res;

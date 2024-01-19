@@ -1,0 +1,118 @@
+body{
+	margin:0px;
+	padding:0px;
+}
+
+.webgl-content* {border: 0; margin: 0; padding: 0}
+.webgl-content {top: 0; left: 0;}
+
+#loadingBlock,#errorBrowserBlock{
+	padding:0px;
+	position:absolute;
+	height:100vh;
+	width:100vw;
+	background-color:#1d5fb7;
+}
+
+#gameContainer canvas{
+	position:absolute;
+    transform:translate(-50%, -50%);
+    top:50%;
+    left:50%;
+}
+
+#fullScreenButton{
+	height:30px;
+	width:30px;
+	position:absolute;
+	z-index:1;
+	bottom:5px;
+	right:5px;
+	background-color:transparent;
+	background-image:url("../img/fullScreen_on.png");
+	background-size:30px 30px;
+	border:none;
+	cursor: pointer;
+}
+
+.subtitle{
+	color:#1896a7;
+	font-size:2.5vh;
+	padding-bottom:3vh;
+	padding-top: 3vh;
+	display: block;
+	height:11vh;
+	width:40vw;
+	margin:auto;
+	text-align: center;
+}
+
+.logo{
+	height:30vh;
+	width:auto;
+	display: block;
+	margin:auto;
+	margin-top:10vh;
+}
+
+//#loadingBlock,#errorBrowserBlock{
+//	background-image:url("../img/background.png");
+//	background-size:cover;
+//}
+
+#emptyBar{
+	background: url("../img/progressEmpty.png") no-repeat right;
+	float: right; 
+	width: 60%; 
+	height: 100%; 
+	display: inline-block;
+}
+
+#fullBar{
+	background: url("../img/progressFull.png") no-repeat right;
+	float: left; 
+	width: 40%; 
+	height: 100%; 
+	display: inline-block;
+}
+
+#progressBar,#warningBrowserBlock,#warningMobileBlock,#errorContent{
+	height:25vh;
+	width:40vw;
+	margin:auto;
+	text-align: center;
+}
+
+#progressBar{
+	height:8vh;
+	color:#666666;
+	font-size:4vh;
+	margin-top: 5vh
+}
+
+#warningBrowserBlock,#warningMobileBlock,#errorContent{
+	margin-top:15vh;
+	color:#666666;
+	font-size:2.3vh;
+}
+
+.browserIcons{
+	display: inline-flex;
+	margin-top:2vh;
+}
+
+.browserIcons a{
+	width:150px;
+}
+
+#errorContent{
+	font-size:3vh;
+	margin-top:5vh;
+}
+
+.centered{
+	height: 120%;
+	max-width:800px;
+	margin-left:auto;
+	margin-right:auto;
+}

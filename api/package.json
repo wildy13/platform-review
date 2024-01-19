@@ -33,6 +33,7 @@
     "nanoid": "^5.0.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "slug": "^8.2.3"
+    "slug": "^8.2.3",
+    "unzipper": "^0.10.14"
   }
 }

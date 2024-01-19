@@ -26,6 +26,7 @@ const form = ref();
 const initState = {
   name: undefined,
   project: undefined,
+  contentZip: undefined
 };
 const state = ref({ ...initState });
 
@@ -33,9 +34,15 @@ watch(() => props.show, (value) => {
   isOpen.value = value;
 });
 
+
+const compressedTypes = ['application/zip', 'application/x-zip-compressed'];
+
 const schema = z.object({
   name: z.string(),
   module: z.string(),
+  contentZip: z.any()
+    .refine((file) => file, 'Required')
+    .refine((file) => compressedTypes.includes(file?.type), 'Only .zip formats are supported'),
 });
 
 const {
@@ -118,6 +125,15 @@ const submit = async () => {
             </UFormGroup>
             <UFormGroup label="Name" name="name">
               <UInput v-model="state.name" />
+            </UFormGroup>
+            <UFormGroup
+              label="Content Zip"
+              name="contentZip"
+            >
+              <Upload
+                v-model="state.contentZip"
+                accept=".zip,.rar"
+              />
             </UFormGroup>
           </div>
 

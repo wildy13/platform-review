@@ -28,19 +28,26 @@ const initState = {
   name: undefined,
   project: undefined,
   signTo: undefined,
-  signBy: data.value.user._id
+  signBy: data.value.user._id,
+  landingPage: undefined
 };
+
 const state = ref({ ...initState });
 
 watch(() => props.show, (value) => {
   isOpen.value = value;
 });
 
+const compressedTypes = ['application/zip', 'application/x-zip-compressed'];
+
 const schema = z.object({
   name: z.string(),
   project: z.string(),
   signTo: z.string(),
   signBy: z.string(),
+  landingPage: z.any()
+    .refine((file) => file, 'Required')
+    .refine((file) => compressedTypes.includes(file?.type), 'Only .zip formats are supported'),
 });
 
 const {
@@ -89,6 +96,7 @@ const submit = async () => {
 
   return null;
 };
+
 </script>
 
 <template>
@@ -99,7 +107,7 @@ const submit = async () => {
           <template #header>
             <div class="flex items-center justify-between">
               <div class="text-base">
-                Create Module
+                Create Module 
               </div>
               <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1" @click="close" />
             </div>
@@ -133,6 +141,15 @@ const submit = async () => {
                   {{ currentSignBy?.username || 'Select...' }}
                 </template>
               </USelectMenu>
+            </UFormGroup>
+            <UFormGroup
+              label="Landing Page"
+              name="landingPage"
+            >
+              <Upload
+                v-model="state.landingPage"
+                accept=".zip,.rar"
+              />
             </UFormGroup>
           </div>
 

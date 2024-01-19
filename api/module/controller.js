@@ -2,12 +2,22 @@ import slug from "slug";
 import Modules from "./model.js";
 import Project from "../project/model.js";
 
-import { mkdir, rmdir, rename } from "node:fs/promises";
+
+import util from 'node:util';
+import fs from 'node:fs';
+import { pipeline } from 'node:stream';
+import { mkdir, rmdir, rename, stat } from "node:fs/promises";
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
+import getFileExtension from '../utils/get-file-extension.js';
+import unzipper from 'unzipper'
+
 
 const { __dirname } = fileDirName(import.meta);
-const publicFolder = `${__dirname}/../../web/public/digital-content`;
+const publicFolder = `${__dirname}/../../web/public/`;
+
+const pump = util.promisify(pipeline);
+
 
 export const getAll = async (req, res) => {
   try {
@@ -23,63 +33,71 @@ export const getAll = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  let prjt;
   try {
-    const { name, project, signTo, signBy } = req.body;
-    const newModules = new Modules({
-      name,
-      slug: slug(name),
-      project,
-      signBy,
-      signTo,
-    });
+    const parts = req.parts();
 
-    const modules = await newModules.save();
-    await modules.populate("project");
-    await modules.populate({
-      path: "signBy",
-      select: "-password  -role",
-    });
-    await modules.populate({
-      path: "signTo",
-      select: "-password  -role",
-    });
+    let prjt;
+    let item;
+    let arsipFolder;
+    let projectFolder;
 
-    prjt = await Project.findById(project);
-    await mkdir(join(publicFolder, prjt.slug, modules.slug), {
-      recursive: true,
-    });
-    await mkdir(join(publicFolder, prjt.slug, modules.slug, "pages"), {
-      recursive: true,
-    });
-    await mkdir(join(publicFolder, prjt.slug, modules.slug, "assets"), {
-      recursive: true,
-    });
-    await mkdir(
-      join(publicFolder, prjt.slug, modules.slug, "pages", "background-theory"),
-      { recursive: true }
-    );
-    await mkdir(
-      join(publicFolder, prjt.slug, modules.slug, "pages", "glossary"),
-      { recursive: true }
-    );
-    await mkdir(
-      join(publicFolder, prjt.slug, modules.slug, "pages", "content"),
-      { recursive: true }
-    );
-    await mkdir(
-      join(publicFolder, prjt.slug, modules.slug, "assets", "image"),
-      { recursive: true }
-    );
-    prjt.module.push(modules._id);
-    await prjt.save();
+    for await (const part of parts) {
+      if (part.type === 'field' && part.value != 'undifined') {
+        const { name, project, signTo, signBy } = JSON.parse(part.value);
+        const newModules = new Modules({
+          name,
+          slug: slug(name),
+          project,
+          signBy,
+          signTo,
+        });
+        item = await newModules.save();
+        await item.populate("project");
+        await item.populate({
+          path: "signBy",
+          select: "-password  -role",
+        });
+        await item.populate({
+          path: "signTo",
+          select: "-password  -role",
+        });
 
-    res.status(200).send(modules);
+        prjt = await Project.findById(project);
+        prjt.module.push(item._id);
+        await prjt.save();
+
+        projectFolder = `${publicFolder}/digital-content/`;
+        arsipFolder = `${publicFolder}/arsip/${prjt.slug}`;
+        await mkdir(join(arsipFolder, item.slug), { recursive: true });
+        await mkdir(join(projectFolder, prjt.slug, item.slug), { recursive: true });
+      } else if (part.type === 'file' && part.file) {
+        const ext = getFileExtension(part.filename);
+
+        const folder = `${arsipFolder}/${item.slug}`;
+        const fileName = `${item.slug}.${ext}`;
+
+        if (ext === 'zip') {
+          await pump(part.file, fs.createWriteStream(`${folder}/${fileName}`));
+
+          const fileStat = await stat(`${folder}/${fileName}`);
+
+          item.compressedFile = fileName;
+          item.compressedFileSize = fileStat.size;
+
+
+          const source = join(publicFolder, 'arsip', prjt.slug, item.slug, fileName);
+          const target = join(publicFolder, 'digital-content', prjt.slug, item.slug);
+          fs.createReadStream(source)
+            .pipe(unzipper.Extract({ path: target }));
+        }
+
+        await item.save();
+      }
+    }
+    res.status(200).send(item);
   } catch (error) {
     if (error.code === 11000) {
-      res
-        .status(400)
-        .send({ message: "Duplicated data, please review your input!" });
+      res.status(400).send({ message: 'Duplicated data, please review your input!' });
     } else {
       res.status(500).send(error);
     }
@@ -93,13 +111,13 @@ export const update = async (req, res) => {
     const modules = await Modules.findById(req.params.id);
 
     prjt = await Project.findById(modules.project);
-    const oldPath = join(publicFolder, prjt.slug, modules.slug);
+    const oldPath = join(publicFolder, 'digital-content', prjt.slug, modules.slug);
 
     Object.assign(modules, { name, slug: slug(name) });
 
     const newPath = join(publicFolder, prjt.slug, slug(name));
     await rename(oldPath, newPath);
-    
+
     const item = await modules.save();
     await item.populate("project");
     await item.populate("content");
@@ -117,14 +135,14 @@ export const remove = async (req, res) => {
     await Promise.all(
       req.body.map(async (v) => {
         const item = await Modules.findById(v._id);
-        const project  =  await Project.findById(item.project);
+        const project = await Project.findById(item.project);
         await project.module.pull(item._id);
         await project.save();
 
-        await rmdir(join(publicFolder, project.slug, item.slug), { recursive: true });
+        await rmdir(join(publicFolder, 'digital-content', project.slug, item.slug), { recursive: true });
 
-        await Modules.findOneAndDelete({ _id: v._id }); 
-        
+        await Modules.findOneAndDelete({ _id: v._id });
+
       })
     );
     res.status(200).send(req.body);

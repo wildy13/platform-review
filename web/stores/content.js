@@ -33,7 +33,19 @@ export const useContentStore = defineStore('content', () => {
   }
 
   async function create(body) {
-    const res = await alovaInstance.Post('/api/content/', body, { headers }).send();
+    const {
+      contentZip, ...rest
+    } = body;
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(rest));
+    formData.append('landingPage', contentZip);
+
+    const res = await alovaInstance.Post('/api/content/', formData, {
+      headers: {
+        Authorization: token.value,
+      },
+      enableUpload: true,
+    }).send();
     this.items.push(res);
 
     return res;

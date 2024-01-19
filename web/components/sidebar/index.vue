@@ -19,7 +19,7 @@ const dropdownItems = [
 </script>
 
 <template>
-    <div class="p-4 flex flex-col space-y-12 bg-white drop-shadow-lg">
+    <div class="p-4 flex flex-col space-y-12">
         <div class="text-xl font-semibold text-center">DASHBOARD</div>
         <div class="flex flex-col space-y-4 justify-between h-full">
             <div class="flex flex-col space-y-4">
@@ -52,7 +52,7 @@ const dropdownItems = [
                                 <li class="flex items-center text-slate-600 ">
                                     <nuxtLink :to="item.to"
                                         class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 hover:bg-slate-50">
-                                        <div>{{ item.text }}</div>
+                                        <span>{{ item.text }}</span>
                                     </nuxtLink>
                                 </li>
                             </template>
@@ -73,11 +73,11 @@ const dropdownItems = [
 <style scoped>
 a.router-link-active,
 a.router-link-exact-active {
-    @apply rounded-lg bg-slate-50;
+    @apply rounded-lg bg-slate-50 ;
 }
 
 a.router-link-exact-active span {
-    @apply text-slate-900;
+    @apply text-slate-900 text-blue-500;
 }
 
 a.router-link-active>div,

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import fileDirName from '../utils/file-dir-name.js';
 
 const { __dirname } = fileDirName(import.meta);
-const publicFolder = `${__dirname}/../../web/public/digital-content`;
+const publicFolder = `${__dirname}/../../web/public/`;
 
 export const getAll = async (req, res) => {
     try {
@@ -30,7 +30,8 @@ export const create = async (req, res) => {
 
         const projects = await newProjects.save()
 
-        await mkdir(join(publicFolder, projects.slug), { recursive: true });
+        await mkdir(join(publicFolder, 'digital-content', projects.slug), { recursive: true });
+        await mkdir(join(publicFolder, 'arsip', projects.slug), { recursive: true });
 
         await projects.populate('module');
         res.status(200).send(projects);
@@ -64,8 +65,6 @@ export const update = async (req, res) => {
 
 export const remove = async (req, res) => {
     try {
-        
-    console.log('test')
         await Promise.all(
             req.body.map(async (v) => {
                 const item = await Projects.findById(v._id);
