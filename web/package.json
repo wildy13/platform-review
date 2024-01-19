@@ -23,6 +23,7 @@
   "dependencies": {
     "@iconify-json/solar": "^1.1.9",
     "@nuxt/ui": "^2.10.0",
+    "@nuxtjs/robots": "^3.0.0",
     "alova": "^2.16.2",
     "pinia": "^2.1.7",
     "zod": "^3.22.4"

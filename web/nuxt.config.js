@@ -30,7 +30,13 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@sidebase/nuxt-auth',
     '@vueuse/nuxt',
+    '@nuxtjs/robots'
   ],
+
+  robots: {
+    Allow: ['/digital-content/'],
+    UserAgent: '*',
+  },
 
   runtimeConfig: {
     public: {
