@@ -10,6 +10,14 @@
       "DB_URL": " mongodb+srv://root:Simanjuntak13!@cluster0.v9o3rsc.mongodb.net/platform",
       "HOST": "0.0.0.0",
       "PORT": "4001"
-    }
+    },
+    "devCommand": "npm run dev",
+    "installCommand": "npm install",
+    "crons": [
+        {
+          "path": "/api/**/*.js",
+          "schedule": "* * * * *"
+        }
+      ]
   }
   
