@@ -5,7 +5,7 @@
     ],
     "routes": [
         { "src": "/api/(.*)", "dest": "/api/$1" },
-        { "src": "/(.*)", "dest": "/" }
+        { "src": "/(.*)", "dest": "/$1" }
       ],
     "env": {
       "DB_URL": " mongodb+srv://root:Simanjuntak13!@cluster0.v9o3rsc.mongodb.net/platform",
