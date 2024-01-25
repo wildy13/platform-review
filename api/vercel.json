@@ -12,12 +12,6 @@
       "PORT": "4001"
     },
     "devCommand": "npm run dev",
-    "installCommand": "npm install",
-    "crons": [
-        {
-          "path": "/api/**/*.js",
-          "schedule": "* * * * *"
-        }
-      ]
+    "installCommand": "npm install"
   }
   
