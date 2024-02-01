@@ -1,9 +1,9 @@
 <template>
-    <UContainer class="flex w-full min-h-screen">
-        <Sidebar class="w-2/12"/>
-        <div class="flex flex-col w-10/12">
-            <Navbar />
-            <slot />
+    <UContainer class="w-full min-h-screen">
+        <Navbar />
+        <div class="flex w-full">
+            <Sidebar class="w-2/12" />
+            <slot class="w-10/12" />
         </div>
     </UContainer>
 </template>

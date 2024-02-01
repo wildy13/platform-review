@@ -50,31 +50,19 @@ const submit = async () => {
 
 <template>
   <div>
-    <UModal
-      v-model="isOpen"
-      prevent-close
-    >
+    <UModal v-model="isOpen" prevent-close>
       <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
         <template #header>
           <div class="flex items-center justify-between">
             <div class="text-base">
               Remove Roles
             </div>
-            <UButton
-              color="gray"
-              variant="ghost"
-              icon="i-heroicons-x-mark"
-              class="-my-1"
-              @click="$emit('close');"
-            />
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1" @click="$emit('close');" />
           </div>
         </template>
 
         <div class="flex flex-col space-y-[2rem]">
-          <ErrorHandler
-            v-if="status === 'error'"
-            :error="error?.message"
-          />
+          <ErrorHandler v-if="status === 'error'" :error="error?.message" />
 
           <div>
             This action will delete the data permanently, Continue?
@@ -84,17 +72,8 @@ const submit = async () => {
         <template #footer>
           <div class="flex space-x-[1rem]">
             <div class="flex-1" />
-            <UButton
-              label="Close"
-              color="white"
-              @click="$emit('close');"
-            />
-            <UButton
-              label="Yes"
-              color="red"
-              :loading="status === 'pending'"
-              @click="submit"
-            />
+            <UButton label="Close" color="white" @click="$emit('close');" />
+            <UButton label="Yes" color="red" :loading="status === 'pending'" @click="submit" />
           </div>
         </template>
       </UCard>

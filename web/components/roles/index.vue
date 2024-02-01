@@ -61,7 +61,7 @@ const breadcrumb = [{
 </script>
 
 <template>
-    <div>
+    <div class="w-full">
         <div class="flex justify-end px-4">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center space-x-2">
@@ -74,7 +74,7 @@ const breadcrumb = [{
                 </li>
             </ol>
         </div>
-        <div class="p-4 mt-24">
+        <div class="p-4">
             <div class="p-10 bg-white rounded-lg">
                 <!-- Header -->
                 <div class="flex justify-between">

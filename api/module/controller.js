@@ -1,6 +1,7 @@
 import slug from "slug";
 import Modules from "./model.js";
 import Project from "../project/model.js";
+import Content from "../content/model.js";
 
 
 import util from 'node:util';
@@ -10,7 +11,7 @@ import { mkdir, rmdir, rename, stat } from "node:fs/promises";
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
 import getFileExtension from '../utils/get-file-extension.js';
-import unzipper from 'unzipper'
+import unZip from 'adm-zip'
 
 
 const { __dirname } = fileDirName(import.meta);
@@ -69,27 +70,26 @@ export const create = async (req, res) => {
         projectFolder = `${publicFolder}/digital-content/`;
         arsipFolder = `${publicFolder}/arsip/${prjt.slug}`;
         await mkdir(join(arsipFolder, item.slug), { recursive: true });
-        await mkdir(join(projectFolder, prjt.slug, item.slug), { recursive: true });
       } else if (part.type === 'file' && part.file) {
         const ext = getFileExtension(part.filename);
-
         const folder = `${arsipFolder}/${item.slug}`;
         const fileName = `${item.slug}.${ext}`;
 
         if (ext === 'zip') {
           await pump(part.file, fs.createWriteStream(`${folder}/${fileName}`));
 
-          const fileStat = await stat(`${folder}/${fileName}`);
-
-          item.compressedFile = fileName;
-          item.compressedFileSize = fileStat.size;
-
-
           const source = join(publicFolder, 'arsip', prjt.slug, item.slug, fileName);
           const target = join(publicFolder, 'digital-content', prjt.slug, item.slug);
-          fs.createReadStream(source)
-            .pipe(unzipper.Extract({ path: target }));
+
+          const zip = new unZip(source);
+          const zipEntires = zip.getEntries();
+          zipEntires.forEach(function (zipEntry) {
+            if (zipEntry.entryName != undefined) {
+              zip.extractAllTo(target, true);
+            }
+          });
         }
+
 
         await item.save();
       }
@@ -115,7 +115,7 @@ export const update = async (req, res) => {
 
     Object.assign(modules, { name, slug: slug(name) });
 
-    const newPath = join(publicFolder, prjt.slug, slug(name));
+    const newPath = join(publicFolder, 'digital-content', prjt.slug, slug(name));
     await rename(oldPath, newPath);
 
     const item = await modules.save();
@@ -136,6 +136,11 @@ export const remove = async (req, res) => {
       req.body.map(async (v) => {
         const item = await Modules.findById(v._id);
         const project = await Project.findById(item.project);
+        const content = await Content.find({ module: item._id })
+        content.map(async (val) => {
+          await Content.findOneAndDelete({ _id: val._id });
+          await Content.save();
+        });
         await project.module.pull(item._id);
         await project.save();
 

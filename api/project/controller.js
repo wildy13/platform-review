@@ -49,11 +49,13 @@ export const update = async (req, res) => {
         const { name } = req.body;
 
         const projects = await Projects.findById(req.params.id);
-        const oldPath = join(publicFolder, projects.slug);
+        const oldPath = join(publicFolder, 'digital-content', projects.slug);
 
         Object.assign(projects, { name, slug: slug(name) });
-        const newPath =  join(publicFolder, projects.slug);
-        await rename(oldPath, newPath);
+        const newPath =  join(publicFolder, 'digital-content', projects.slug);
+        await rename(oldPath, newPath, (err) => {
+            if (err) throw err;
+        });
 
         const item = await projects.save();
         await item.populate('module')

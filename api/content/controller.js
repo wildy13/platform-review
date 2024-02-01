@@ -10,7 +10,7 @@ import { mkdir, rmdir, rename, stat } from "node:fs/promises";
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
 import getFileExtension from '../utils/get-file-extension.js';
-import unzipper from 'unzipper'
+import unZip from 'adm-zip'
 
 const { __dirname } = fileDirName(import.meta);
 const publicFolder = `${__dirname}/../../web/public`;
@@ -89,9 +89,14 @@ export const create = async (req, res) => {
 
                     const source = join(publicFolder, 'arsip', project.slug, modules.slug, 'content', item.slug, fileName);
                     const target = join(publicFolder, 'digital-content', project.slug, modules.slug, 'pages', 'content', item.slug);
-                    console.log('target link :' + source)
-                    fs.createReadStream(source)
-                        .pipe(unzipper.Extract({ path: target }));
+
+                    const zip = new unZip(source);
+                    const zipEntires = zip.getEntries();
+                    zipEntires.forEach(function (zipEntry) {
+                      if (zipEntry.entryName != undefined) {
+                        zip.extractAllTo(target, true);
+                      }
+                    });
                 }
 
             }
