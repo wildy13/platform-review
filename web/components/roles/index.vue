@@ -46,35 +46,12 @@ onMounted(async () => {
     await execute();
 });
 
-const breadcrumb = [{
-    icon: 'i-heroicons-identification',
-    to: '/roles'
-}, {
-    label: 'Roles',
-    icon: 'i-solar-alt-arrow-right-outline'
-}, {
-    label: 'Default',
-    icon: 'i-solar-alt-arrow-right-outline',
-    class: 'text-blue-500'
-}]
 
 </script>
 
 <template>
     <div class="w-full">
-        <div class="flex justify-end px-4">
-            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                <li class="inline-flex items-center space-x-2">
-                    <div v-for="item in breadcrumb">
-                        <nuxtLink :to="item.to" class="text-base flex items-center">
-                            <UIcon :name="item.icon" />
-                            <span :class="item.class">{{ item.label }}</span>
-                        </nuxtLink>
-                    </div>
-                </li>
-            </ol>
-        </div>
-        <div class="p-4">
+        <div class="p-4 pt-24">
             <div class="p-10 bg-white rounded-lg">
                 <!-- Header -->
                 <div class="flex justify-between">

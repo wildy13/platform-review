@@ -23,7 +23,7 @@ const items = [
             <UIcon name="i-solar-bell-bing-bold" class="w-8 h-8 text-primary-600 group-hover:text-primary-900" />
             <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }"
                 :popper="{ placement: 'bottom-start' }">
-                <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" />
+                <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" :alt="data.user.username" />
 
                 <template #account="{ item }">
                     <div class="text-left">

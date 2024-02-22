@@ -10,7 +10,12 @@ const publicFolder = `${__dirname}/../../web/public/`;
 
 export const getAll = async (req, res) => {
     try {
-        const projects = await Projects.find({}).populate('module');
+        const projects = await Projects.find({}).populate({
+            path: 'module',
+            populate: {
+                path: 'content'
+            }
+        });
         res.status(200).send(projects);
     } catch (error) {
         res.status(500).send(error);
