@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 const schema = new Schema({
     _id: { type: String, default: () => nanoid(12) },
-    name: { type: String, dropDups: true },
+    name: { type: String, unique: true, dropDups: true },
     slug: { type: String },
     signBy: { type: String, ref: 'Users' },
     signTo: [{ type: String, ref: 'Users' }],

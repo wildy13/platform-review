@@ -1,23 +1,27 @@
 <script setup>
 import { z } from 'zod';
-import { useModuleStore } from '../../stores/module';
 import { useContentStore } from '../../stores/content';
-import { useProjectStore } from '../../stores/projects'
 
-const {data} = useAuth();
+const { data } = useAuth();
 
 const props = defineProps({
   show: {
     type: Boolean,
     required: true,
   },
+  dt: {
+    type: Object,
+    required: true
+  }
 });
+
+
+
+
 
 const emit = defineEmits(['close']);
 
-const module = useModuleStore();
 const content = useContentStore();
-const project = useProjectStore();
 
 
 const toast = useToast();
@@ -26,22 +30,21 @@ const isOpen = ref(false);
 const form = ref();
 
 const initState = {
-  name: undefined,
-  project: undefined,
-  contentZip: undefined
+  contentZip: undefined,
 };
-const state = ref({ ...initState });
+const state = ref();
 
-watch(() => props.show, (value) => {
-  isOpen.value = value;
+watch(() => [props.show, props.dt], ([showValue, dataValue]) => {
+  isOpen.value = showValue;
+
+  state.value = {...dataValue};
 });
-
-
 const compressedTypes = ['application/zip', 'application/x-zip-compressed'];
 
 const schema = z.object({
-  name: z.string(),
-  module: z.string(),
+  contentZip: z.any()
+    .refine((file) => file, 'Required')
+    .refine((file) => compressedTypes.includes(file?.type), 'Only .zip formats are supported'),
 });
 
 const {
@@ -52,26 +55,12 @@ const {
   immediate: false,
 });
 
-const {
-  status: sts,
-  error: err,
-  execute: exct,
-} = useLazyAsyncData(() => Promise.all([module.getAll(), project.getAll()]), {
-  immediate: false,
-});
-
-
-const currentProject = computed(() => project.items.find((v) => v._id === state.value.project));
-const currentModule = computed(() => module.items.find((v) => v._id === state.value.module));
-
 const close = () => {
   Object.assign(state.value, initState);
   error.value = undefined;
   emit('close');
 };
-onMounted(async () => {
-  await exct();
-});
+
 const submit = async () => {
   await form.value?.validate();
   await execute();
@@ -106,34 +95,8 @@ const submit = async () => {
 
           <div class="flex flex-col space-y-[2rem]">
             <ErrorHandler v-if="error" :error="error?.message" />
-            <UFormGroup label="Project" name="project">
-              <USelectMenu v-model="state.project" :options="project.items" size="lg" value-attribute="_id"
-                option-attribute="name" searchable>
-                <template #label>
-                  {{ currentProject?.name || 'Select...' }}
-                </template>
-              </USelectMenu>
-            </UFormGroup>
-            <UFormGroup label="Module" name="module">
-              <USelectMenu clear-search-on-close v-model="state.module" :options="currentProject?.module" size="lg" value-attribute="_id"
-                option-attribute="name" searchable>
-                <template #label>
-                  {{ currentModule?.name|| 'Select...' }}
-                </template>
-              </USelectMenu>
-            </UFormGroup>
-            <UFormGroup label="Name" name="name">
-              <UInput v-model="state.name" />
-            </UFormGroup>
-            <UFormGroup
-              v-if="data.user.role.name === 'user'"
-              label="Content Zip"
-              name="contentZip"
-            >
-              <Upload
-                v-model="state.contentZip"
-                accept=".zip,.rar"
-              />
+            <UFormGroup v-if="data.user.role.name === 'user'" label="Content Zip" name="contentZip">
+              <Upload v-model="state.contentZip" accept=".zip,.rar" />
             </UFormGroup>
           </div>
 

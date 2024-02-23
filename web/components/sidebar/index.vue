@@ -5,13 +5,10 @@ const items = [
         to: '/dashboard',
     },
     {
-        label: 'Project',
-        subs: [
-            { label: 'Category', to: '/project/category' },
-            { label: 'Module', to: '/project/module' },
-            { label: 'Content', to: '/project/content' },
-        ],
-    },
+        label: 'Upload',
+        to: '/upload'
+    }
+
 ];
 
 const adminItems = [
@@ -21,7 +18,15 @@ const adminItems = [
             { label: 'User', to: '/management/users' },
             { label: 'Roles', to: '/management/roles' },
         ],
-    }
+    },
+    {
+        label: 'Project',
+        subs: [
+            { label: 'Category', to: '/project/category' },
+            { label: 'Module', to: '/project/module' },
+            { label: 'Content', to: '/project/content' },
+        ],
+    },
 ];
 
 const route = useRoute();

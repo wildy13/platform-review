@@ -4,7 +4,7 @@ import GlobalFetch from 'alova/GlobalFetch';
 
 export const useContentStore = defineStore('content', () => {
   const config = useRuntimeConfig();
-
+  const { data } = useAuth();
   const { token } = useAuth();
   const headers = {
     Authorization: token.value,
@@ -33,26 +33,45 @@ export const useContentStore = defineStore('content', () => {
   }
 
   async function create(body) {
+    if (data.value.user.role.name === 'admin') {
+      const res = await alovaInstance.Post('/api/content/', body, { headers }).send();
+      this.items.push(res);
+
+      return res;
+    } else if (data.value.user.role.name != 'admin') {
+      const {
+        contentZip, ...rest
+      } = body;
+
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(rest));
+      formData.append('content', contentZip);
+      const res = await alovaInstance.Post('/api/content/', formData, {
+        headers: {
+          Authorization: token.value,
+        },
+        enableUpload: true,
+      }).send();
+      this.items.push(res);
+
+      return res;
+    }
+  }
+
+  async function update(body) {
     const {
       contentZip, ...rest
     } = body;
     const formData = new FormData();
     formData.append('data', JSON.stringify(rest));
-    formData.append('landingPage', contentZip);
+    formData.append('content', contentZip);
 
-    const res = await alovaInstance.Post('/api/content/', formData, {
+    const res = await alovaInstance.Put('/api/content/', formData, {
       headers: {
         Authorization: token.value,
       },
       enableUpload: true,
     }).send();
-    this.items.push(res);
-
-    return res;
-  }
-
-  async function update(body) {
-    const res = await alovaInstance.Put(`/api/content/${body._id}`, body, { headers }).send();
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 

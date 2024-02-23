@@ -4,7 +4,7 @@ import { Strategy } from 'passport-local';
 const localAuthenticate = async (User, email, password, done) => {
   try {
     const user = await User.findOne({ email });
-
+    await user.populate('role')
     if (!user) {
       return done(null, false, { message: 'Invalid Email or Password' });
     }
