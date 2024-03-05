@@ -119,7 +119,7 @@ const toggleUpload = (row) => {
                     <template #status-data="{ row }">
                         <div v-if="row.status === true">
                             <UTooltip text="Click me to show">
-                                <NuxtLink :to="`project/${row.module.project.slug}/${row.module.slug}/${row.module._id}`">
+                                <NuxtLink :to="`/digital-content/${row.module.project.slug}/${row.module.slug}/pages/content/${row.slug}/index.php`">
                                     <UIcon name="i-solar-eye-broken" class="w-5 h-5" />
                                 </NuxtLink>
                             </UTooltip>

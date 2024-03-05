@@ -47,6 +47,14 @@ export const useUsersStore = defineStore('users', () => {
     return res;
   }
 
+  async function profile(body) {
+    const res = await alovaInstance.Put(`/api/users/profile/${body._id}`, body, { headers }).send();
+    const index = this.items.findIndex((v) => v._id === res._id);
+    Object.assign(this.items[index], res);
+
+    return res;
+  }
+
   async function remove(body) {
     const res = await alovaInstance.Delete('/api/users/remove', body, { headers }).send();
     await Promise.all(
@@ -61,6 +69,6 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   return {
-    items, getAll, create, update, remove,
+    items, getAll, create, update, remove,profile
   };
 });

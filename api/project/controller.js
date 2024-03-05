@@ -2,6 +2,7 @@ import slug from 'slug';
 import Projects from './model.js';
 
 import { mkdir, rmdir, rename } from 'node:fs/promises';
+import { copy, emptyDir } from 'fs-extra'
 import { join } from 'node:path';
 import fileDirName from '../utils/file-dir-name.js';
 
@@ -54,13 +55,13 @@ export const update = async (req, res) => {
         const { name } = req.body;
 
         const projects = await Projects.findById(req.params.id);
-        const oldPath = join(publicFolder, 'digital-content', projects.slug);
+
+        await mkdir(join(publicFolder, 'digital-content', slug(name)));
+        await copy(join(publicFolder, 'digital-content', projects.slug), join(publicFolder, 'digital-content', slug(name)));
+        await emptyDir(join(publicFolder, 'digital-content', projects.slug));
+        await rmdir(join(publicFolder, 'digital-content', projects.slug))
 
         Object.assign(projects, { name, slug: slug(name) });
-        const newPath =  join(publicFolder, 'digital-content', projects.slug);
-        await rename(oldPath, newPath, (err) => {
-            if (err) throw err;
-        });
 
         const item = await projects.save();
         await item.populate('module')

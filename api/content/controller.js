@@ -7,6 +7,7 @@ import util from 'node:util';
 import fs from 'node:fs';
 import { pipeline } from 'node:stream';
 import { mkdir, rmdir, rename, stat } from "node:fs/promises";
+import { copy, emptyDir } from 'fs-extra'
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
 import getFileExtension from '../utils/get-file-extension.js';
@@ -58,11 +59,13 @@ export const create = async (req, res) => {
                 if (part.type === 'file' && part.file) {
                     const ext = getFileExtension(part.filename);
                     const { _id, slug, module, status } = JSON.parse(part.fields.data.value);
+                    
                     const modules = await Modules.findById(module._id);
                     const prjt = await Project.findById(modules.project);
 
                     const item = await Content.findById(_id);
-
+                    const arsipFolder = `${publicFolder}/arsip/${prjt.slug}/${modules.slug}/content/`;
+                    await mkdir(join(arsipFolder, slug), { recursive: true });
                     if (ext === 'zip') {
                         const fileName = `${slug}.${ext}`;
                         const folder = `${publicFolder}/arsip/${prjt.slug}/${modules.slug}/content`;
@@ -105,14 +108,15 @@ export const update = async (req, res) => {
             if (part.type === 'field' && part.value != undefined) {
                 const { _id, name, module, status } = JSON.parse(part.fields.data.value);
                 const item = await Content.findById(_id);
-                const Module = await Modules.findById(module._id);
+                const Module = await Modules.findById(item.module);
                 const project = await Project.findById(Module.project);
+                
+                await mkdir(join(publicFolder, 'digital-content', project.slug, Module.slug, 'pages/content', slug(name)));
+                await copy(join(publicFolder, 'digital-content', project.slug, Module.slug, 'pages/content', item.slug), join(publicFolder, 'digital-content', project.slug, Module.slug, 'pages/content', slug(name)));
+                await emptyDir(join(publicFolder, 'digital-content', project.slug, Module.slug, 'pages/content', item.slug)).catch(error => console.error('Gagal mengosongkan direktori:', error));
+                await rmdir(join(publicFolder, 'digital-content', project.slug, Module.slug, 'pages/content', item.slug)).catch(error => console.error('Gagal menghapus direktori:', error));
+                
 
-                const oldPath = join(publicFolder, 'digital-content', project.slug, module.slug, 'pages/content', item.slug);
-                const newPath = join(publicFolder, 'digital-content', project.slug, module.slug, 'pages/content', slug(name));
-                console.log(oldPath);
-
-                await rename(oldPath, newPath);
                 Object.assign(item, { name, slug: slug(name) });
                 await item.save();
                 await item.populate({
@@ -187,14 +191,12 @@ export const remove = async (req, res) => {
     try {
         await Promise.all(
             req.body.map(async (v) => {
-
                 const item = await Content.findById(v._id);
                 const module = await Modules.findById(item.module);
                 const project = await Project.findById(module.project);
-
                 await module.content.pull(item._id);
                 await module.save();
-                await rmdir(join(publicFolder, project.slug, module.slug, 'pages/content', slug), { recursive: true });
+                await rmdir(join(publicFolder, 'digital-content', project.slug, module.slug, 'pages/content', item.slug), { recursive: true });
 
                 await Content.findOneAndDelete({ _id: v._id });
             })

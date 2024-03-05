@@ -26,14 +26,6 @@ const {
 
 const projectList = computed(() => project.items.map((items) => ({ ...items, isOpen: false, isActive: false })));
 
-const toggleOpen = (index) => {
-    const { isOpen } = statuses.value[index];
-
-    statuses.value = statuses.value.map((items, idx) => (idx === index
-        ? { ...items, isOpen: projectList.value[index] ? true : !isOpen, isActive: true }
-        : { ...items, isOpen: false, isActive: false }));
-};
-
 onMounted(async () => {
     await execute();
     statuses.value = projectList.value

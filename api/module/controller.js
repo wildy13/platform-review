@@ -8,6 +8,7 @@ import util from 'node:util';
 import fs from 'node:fs';
 import { pipeline } from 'node:stream';
 import { mkdir, rmdir, rename, stat } from "node:fs/promises";
+import { copy, emptyDir } from 'fs-extra'
 import { join } from "node:path";
 import fileDirName from "../utils/file-dir-name.js";
 import getFileExtension from '../utils/get-file-extension.js';
@@ -108,15 +109,18 @@ export const update = async (req, res) => {
   let prjt;
   try {
     const { name } = req.body;
+
     const modules = await Modules.findById(req.params.id);
 
     prjt = await Project.findById(modules.project);
-    const oldPath = join(publicFolder, 'digital-content', prjt.slug, modules.slug);
+
+    await mkdir(join(publicFolder, 'digital-content', prjt.slug, slug(name)));
+
+    await copy(join(publicFolder, 'digital-content', prjt.slug, modules.slug), join(publicFolder, 'digital-content', prjt.slug, slug(name)));
+    await emptyDir(join(publicFolder, 'digital-content', prjt.slug, modules.slug));
+    await rmdir(join(publicFolder, 'digital-content', prjt.slug, modules.slug));
 
     Object.assign(modules, { name, slug: slug(name) });
-
-    const newPath = join(publicFolder, 'digital-content', prjt.slug, slug(name));
-    await rename(oldPath, newPath);
 
     const item = await modules.save();
     await item.populate("project");

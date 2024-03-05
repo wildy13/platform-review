@@ -1,6 +1,6 @@
 export default defineAppConfig({
   ui: {
-    primary: 'slate',
+    primary: 'blue',
     input: {
       color: {
         white: {
@@ -18,7 +18,7 @@ export default defineAppConfig({
           link: 'text-primary-400  hover:text-primary-700 underline-offset-4 hover:underline focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 ',
         },
         black: {
-          solid: 'shadow-sm text-white  bg-primary-950 hover:bg-primary-950 disabled:bg-primary-950 focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500',
+          solid: 'shadow-sm text-black hover:text-white  bg-primary-500 hover:bg-primary-500 disabled:bg-primary-950 focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500',
         },
       },
       default: {

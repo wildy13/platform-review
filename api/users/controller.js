@@ -58,13 +58,30 @@ export const update = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-      await Promise.all(
-          req.body.map(async(v) => {
-              await User.findOneAndDelete({ _id: v._id })
-          })
-      );
-      res.status(200).send(req.body);
+    await Promise.all(
+      req.body.map(async (v) => {
+        await User.findOneAndDelete({ _id: v._id })
+      })
+    );
+    res.status(200).send(req.body);
   } catch (error) {
-      res.status(500).send(error);
+    res.status(500).send(error);
+  }
+};
+
+export const profile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).send({ message: 'Pengguna tidak ditemukan' });
+    }
+
+    user.bio = req.body.bio
+
+    const item = await user.save();
+    res.status(200).send(item);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Terjadi kesalahan server' });
   }
 };

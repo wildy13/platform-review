@@ -1,18 +1,30 @@
 <script setup>
-const { data,  signOut } = useAuth();
+const { data, signOut } = useAuth();
 
 
 const items = [
-    [{
-        slot: 'account',
-        disabled: true
-    }], [{
-        label: 'Sign out',
-        icon: 'i-heroicons-arrow-left-on-rectangle',
-        click: async() => {
-            await signOut({ callbackUrl: '/' });
+    [
+        {
+            slot: 'account',
+            disabled: true
         }
-    }]
+    ],
+    [
+        {
+            label: 'Sign out',
+            icon: 'i-heroicons-arrow-left-on-rectangle',
+            click: async () => {
+                await signOut({ callbackUrl: '/' });
+            }
+        },
+        {
+            label: 'Settings',
+            icon: 'i-heroicons-cog-8-tooth',
+            click:  async () => {
+                await navigateTo(`/profile/${data.value.user._id}`)
+            }
+        }
+    ]
 ]
 </script>
 

@@ -4,10 +4,7 @@ const items = [
         label: 'Dashboard',
         to: '/dashboard',
     },
-    {
-        label: 'Upload',
-        to: '/upload'
-    }
+
 
 ];
 
@@ -29,11 +26,43 @@ const adminItems = [
     },
 ];
 
+
+const userItems = [
+    {
+        label: 'Upload',
+        to: '/upload'
+    }
+]
+
+const managerItems = [
+    {
+        label: 'Management',
+        subs: [
+            { label: 'User', to: '/management/users' },
+            { label: 'Roles', to: '/management/roles' },
+        ],
+    },
+]
+
 const route = useRoute();
 const { data } = useAuth();
 const scope = effectScope();
 
-const allItems = computed(() => (data.value?.user.role.name === 'admin' ? [...items, ...adminItems] : items));
+const allItems = computed(() => {
+    if (data.value) {
+        const userRole = data.value.user.role.name;
+        if (userRole === 'admin') {
+            return [...items, ...adminItems];
+        } else if (userRole === 'manager') {
+            return [...items, ...managerItems];
+        } else {
+            return [...items, ...userItems];
+        }
+    } else {
+        return items;
+    }
+});
+
 
 const statuses = ref(allItems.value.map(() => ({ isOpen: false, isActive: false })));
 
