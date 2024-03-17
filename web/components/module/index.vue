@@ -84,18 +84,16 @@ onMounted(async () => {
                                 </template>
                             </UInput>
                         </div>
-                        <UTooltip text="Create">
-                            <UButton variant="ghost" @click="showCreate = true">
-                                <UIcon name="i-solar-add-square-bold"
-                                    class="w-8 h-8 text-primary-600 hover:text-primary-900" />
-                            </UButton>
-                        </UTooltip>
-                        <UTooltip text="Remove">
-                            <UButton variant="ghost" :disabled="!selected.length" @click="showRemove = true">
-                                <UIcon name="i-solar-trash-bin-2-bold"
-                                    class="w-8 h-8 text-primary-600 hover:text-red-600" />
-                            </UButton>
-                        </UTooltip>
+                        <UButton variant="ghost" @click="showCreate = true">
+                            <UIcon name="i-solar-add-square-bold"
+                                class="w-8 h-8 text-primary-600 hover:text-primary-900" />
+                                <span>add</span>
+                        </UButton>
+                        <UButton variant="ghost" :disabled="!selected.length" @click="showRemove = true">
+                            <UIcon name="i-solar-trash-bin-2-bold"
+                                class="w-8 h-8 text-primary-600 hover:text-red-600" />
+                                <span>remove</span>
+                        </UButton>
                     </div>
                 </div>
                 <!-- Table -->
@@ -117,10 +115,8 @@ onMounted(async () => {
                     </template>
                     <template #actions-data="{ row }">
                         <div class="flex space-x-[1rem]">
-                            <UTooltip text="Edit">
-                                <UButton icon="i-solar-pen-2-linear" size="xs" variant="ghost" color="gray" :padded="false"
-                                    @click="editDialog(row)" />
-                            </UTooltip>
+                            <UButton icon="i-solar-pen-2-linear" size="xs" variant="ghost" color="gray" :padded="false" label="edit"
+                            @click="editDialog(row)" />
                         </div>
                     </template>
                 </UTable>

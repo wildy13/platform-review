@@ -23,6 +23,7 @@ const form = ref();
 
 const state = ref({
     bio: undefined,
+    usersImg: undefined,
 });
 
 watch(() => [props.show, props.data], ([showValue, dataValue]) => {
@@ -76,13 +77,16 @@ const submit = async () => {
                             <div class="text-base">
                                 Edit Pofile
                             </div>
-                            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1"
-                                @click="close" />
+                            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1" @click="close" />
                         </div>
                     </template>
 
                     <div class="flex flex-col space-y-[2rem]">
                         <ErrorHandler v-if="error" :error="error?.message" />
+
+                        <UFormGroup label="Image" name="imageFile">
+                            <Upload v-model="state.imageFile" accept="image/*" />
+                        </UFormGroup>
 
                         <UFormGroup label="Bio" name="bio">
                             <UInput v-model="state.bio" />
@@ -92,8 +96,8 @@ const submit = async () => {
                     <template #footer>
                         <div class="flex space-x-[1rem]">
                             <div class="flex-1" />
-                            <UButton label="Close" color="white" @click="close"  class="bg-white"/>
-                            <UButton label="Save" :loading="status === 'pending'" @click="submit"  />
+                            <UButton label="Close" color="white" @click="close" class="bg-white" />
+                            <UButton label="Save" :loading="status === 'pending'" @click="submit" />
                         </div>
                     </template>
                 </UCard>

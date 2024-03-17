@@ -18,7 +18,7 @@
 
 <template>
     <div>
-        <div class="fixed top-0 left-0 w-full border-b-2 bg-gray-100">
+        <div class="fixed top-0 left-0 w-full border-b-2 z-50 bg-gray-100">
             <UContainer>
                 <Navbar class="h-[8%]" />
             </UContainer>

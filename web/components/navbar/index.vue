@@ -1,4 +1,5 @@
 <script setup>
+import slug from 'slug';
 const { data, signOut } = useAuth();
 
 
@@ -33,9 +34,9 @@ const items = [
         <div class="text-xl font-semibold">DASHBOARD</div>
         <div class="flex items-center space-x-4">
             <UIcon name="i-solar-bell-bing-bold" class="w-8 h-8 text-primary-600 group-hover:text-primary-900" />
-            <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }"
+            <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' }, container: 'z-50' }"
                 :popper="{ placement: 'bottom-start' }">
-                <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" :alt="data.user.username" />
+                <UAvatar :src="`/image/users/${slug(data.user.username)}.png`" :alt="data.user.username" />
 
                 <template #account="{ item }">
                     <div class="text-left">

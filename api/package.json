@@ -30,7 +30,7 @@
     "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
     "fs-extra": "^11.2.0",
-    "jimp": "^0.22.10",
+    "jimp": "^0.22.12",
     "mongoose": "^8.0.3",
     "mongoose-bcrypt": "^1.11.0",
     "nanoid": "^5.0.4",

@@ -35,7 +35,7 @@ onMounted(async () => {
 
 <template>
     <div>
-        <div class="pt-4 max-w-5xl">
+        <div class="pt-16 max-w-5xl">
             <div class="flex flex-auto space-x-4 justify-center items-center">
                 <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between shadow drop-shadow-xl">
                     <div class="flex flex-col space-y-4">

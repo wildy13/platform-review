@@ -1,4 +1,5 @@
 <script setup>
+import slug from 'slug'
 const route = useRoute();
 const { data } = useAuth()
 
@@ -15,8 +16,8 @@ const editDialog = (item) => {
 <template>
     <div class="pt-4 w-full">
         <div class="flex space-x-24 w-full">
-            <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" size="xl" :alt="data.user.username"
-                :ui="{ size: { xl: 'h-72 w-72 text-4xl' } }" />
+            <UAvatar  :src="`/image/users/${slug(data.user.username)}.png`" size="xl" :alt="data.user.username"
+                :ui="{ size: { xl: 'h-72 w-72 text-4xl' } }" class="bg-contain" />
             <div class="flex flex-col justify-between w-full">
                 <div class="flex flex-col space-y-12">
                     <div>

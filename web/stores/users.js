@@ -48,7 +48,11 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   async function profile(body) {
-    const res = await alovaInstance.Put(`/api/users/profile/${body._id}`, body, { headers }).send();
+    const { imageFile, ...rest } = body;
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(rest));
+    formData.append('imageFile', imageFile);
+    const res = await alovaInstance.Put(`/api/users/profile/${body._id}`, formData, { headers: { Authorization: token.value}, enableUpload: true }).send();
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 
