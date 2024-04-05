@@ -36,6 +36,7 @@ const cancel = () => {
 <template>
   <div class="flex border-t border-r border-b border-gray-200 bg-primary-800 rounded-lg">
     <UButton
+      color="white"
       label="Choose file"
       :value="modelValue"
       @click="open"
@@ -46,6 +47,7 @@ const cancel = () => {
       </div>
       <UButton
         v-if="modelValue?.name"
+        color="white"
         variant="ghost"
         size="xs"
         icon="i-heroicons-x-mark"

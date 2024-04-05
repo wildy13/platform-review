@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia';
+import slug from 'slug'
 import { createAlova } from 'alova';
 import GlobalFetch from 'alova/GlobalFetch';
 
 export const useUsersStore = defineStore('users', () => {
   const config = useRuntimeConfig();
-
-  const { token } = useAuth();
+  
+  const { token, data } = useAuth();
   const headers = {
     Authorization: token.value,
     'Content-Type': 'application/json;charset=UTF-8',
-  }; 
+  };
 
   const alovaInstance = createAlova({
     baseURL: config.public.apiUrl,
@@ -24,6 +25,7 @@ export const useUsersStore = defineStore('users', () => {
   });
 
   const items = ref([]);
+  const avatar = ref(slug(data.value.user.username));
 
   async function getAll() {
     const res = await alovaInstance.Get('/api/users').send();
@@ -47,15 +49,21 @@ export const useUsersStore = defineStore('users', () => {
     return res;
   }
 
-  async function profile(body) {
-    const { imageFile, ...rest } = body;
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(rest));
-    formData.append('imageFile', imageFile);
-    const res = await alovaInstance.Put(`/api/users/profile/${body._id}`, formData, { headers: { Authorization: token.value}, enableUpload: true }).send();
+  async function changePassword(body) {
+    console.log(body);
+    const res = await alovaInstance.Put(`/api/users/changePassword/${data.value.user._id}`, body, { headers }).send();
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 
+    return res;
+  }
+
+  async function profile(body) {
+    const { imageFile } = body;
+    const formData = new FormData();
+    formData.append('imageFile', imageFile);
+    const res = await alovaInstance.Put(`/api/users/profile/${body._id}`, formData, { headers: { Authorization: token.value }, enableUpload: true }).send();
+    this.avatar = slug(res.username);
     return res;
   }
 
@@ -73,6 +81,6 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   return {
-    items, getAll, create, update, remove,profile
+    items, avatar, getAll, create, update, remove, changePassword, profile
   };
 });

@@ -157,7 +157,7 @@ const submit = async () => {
             <div class="flex space-x-[1rem]">
               <div class="flex-1" />
               <UButton label="Close" color="white" @click="close" />
-              <UButton label="Save" :loading="status === 'pending'" type="submit" />
+              <UButton color="primary" label="Save" :loading="status === 'pending'" type="submit" />
             </div>
           </template>
         </UCard>

@@ -94,7 +94,7 @@ const submit = async () => {
         <UButton
           type="submit"
           block
-          class="bg-blue-800"
+          class="bg-blue-800 text-white"
         >
           Sign In
         </UButton>

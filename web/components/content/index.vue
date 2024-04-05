@@ -33,13 +33,13 @@ const columns = [{
     label: 'Actions',
 }];
 
-const data = computed(() => store.items.map((val) => ({
+const item = computed(() => store.items.map((val) => ({
     ...val,
     module: val.module.name,
     project: val.module.project.name
 }
 )));
-const items = computed(() => useFilter(data.value, search.value, ['name', 'project', 'module']) || []);
+const items = computed(() => useFilter(item.value, search.value, ['name', 'project', 'module']) || []);
 const rows = computed(() => items.value.slice((page.value - 1) * pageCount.value, (page.value) * pageCount.value));
 const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
 const pageTo = computed(() => Math.min(page.value * pageCount.value, items.value.length));
@@ -66,11 +66,11 @@ onMounted(async () => {
 <template>
     <div class="w-full">
         <div class="p-4 pt-24">
-            <div class="p-10 bg-white rounded-lg">
+            <div class="p-10 bg-white rounded-lg border-2">
                 <!-- Header -->
                 <div class="flex justify-between">
                     <div class="text-2xl font-semibold">Content Management</div>
-                    <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
                         <div>
                             <UInput v-model="search" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
                                 :ui="{ icon: { trailing: { pointer: '' } } }">
@@ -80,14 +80,10 @@ onMounted(async () => {
                                 </template>
                             </UInput>
                         </div>
-                        <UButton variant="ghost" @click="showCreate = true">
-                            <UIcon name="i-solar-add-square-bold" class="w-8 h-8 text-primary-600 hover:text-primary-900" />
-                            <span>add</span>
+                        <UButton  @click="showCreate = true" icon="i-solar-add-square-bold" size="sm" color="primary"
+                            label="Create" :trailing="false">
                         </UButton>
-                        <UButton variant="ghost" :disabled="!selected.length" @click="showRemove = true">
-                            <UIcon name="i-solar-trash-bin-2-bold" class="w-8 h-8 text-primary-600 hover:text-red-600" />
-                            <span>remove</span>
-                        </UButton>
+                        <UButton icon="i-solar-trash-bin-2-bold" size="sm" color="red" label="Remove" :disabled="!selected.length" @click="showRemove = true" />
                     </div>
                 </div>
                 <!-- Table -->
@@ -116,7 +112,7 @@ onMounted(async () => {
 
             </div>
 
-            <ContentCreate :show="showCreate" @close="showCreate = false" />
+            <ContentCreate  :show="showCreate" @close="showCreate = false" />
             <ContentEdit :show="showEdit" :data="itemData" @close="showEdit = false" />
             <ContentRemove :show="showRemove" :data="selected" @close="showRemove = false" />
 

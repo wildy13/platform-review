@@ -22,11 +22,7 @@ const isOpen = ref(false);
 const form = ref();
 
 const state = ref({
-    bio: undefined,
-});
-
-const schema = z.object({
-    bio: z.string(),
+    usersImg: undefined,
 });
 
 watch(() => [props.show, props.data], ([showValue, dataValue]) => {
@@ -69,7 +65,7 @@ const submit = async () => {
 <template>
     <div>
         <UModal v-model="isOpen" prevent-close>
-            <UForm ref="form" :schema="schema" :state="state" class="flex flex-col space-y-[2rem]" @submit="submit">
+            <UForm ref="form" :state="state" class="flex flex-col space-y-[2rem]" @submit="submit">
                 <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
                     <template #header>
                         <div class="flex items-center justify-between">
@@ -83,10 +79,9 @@ const submit = async () => {
                     <div class="flex flex-col space-y-[2rem]">
                         <ErrorHandler v-if="error" :error="error?.message" />
 
-                        <UFormGroup label="Bio" name="bio">
-                            <UInput v-model="state.bio" />
+                        <UFormGroup label="Image" name="imageFile">
+                            <Upload v-model="state.imageFile" accept="image/*" />
                         </UFormGroup>
-
                     </div>
 
                     <template #footer>

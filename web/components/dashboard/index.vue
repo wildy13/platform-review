@@ -37,7 +37,7 @@ onMounted(async () => {
     <div>
         <div class="pt-16 max-w-5xl">
             <div class="flex flex-auto space-x-4 justify-center items-center">
-                <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between shadow drop-shadow-xl">
+                <div class="w-72 h-32  rounded-xl text-gray-500 p-2 flex justify-between border-solid border-2">
                     <div class="flex flex-col space-y-4">
                         <div class="text-base font-semibold">USERS SUMMARY</div>
                         <div class="text-xl">{{ users.items.length }}</div>
@@ -46,7 +46,7 @@ onMounted(async () => {
                         <UIcon name="i-solar-users-group-rounded-bold" class="w-12 h-12" />
                     </div>
                 </div>
-                <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between drop-shadow-xl">
+                <div class="w-72 h-32  rounded-xl text-gray-500 p-2 flex justify-between border-solid border-2">
                     <div class="flex flex-col space-y-4">
                         <div class="text-base font-semibold">ROLES SUMMARY</div>
                         <div class="text-xl">{{ roles.items.length }}</div>
@@ -55,7 +55,7 @@ onMounted(async () => {
                         <UIcon name="i-solar-user-id-bold" class="w-12 h-12" />
                     </div>
                 </div>
-                <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between drop-shadow-xl">
+                <div class="w-72 h-32  rounded-xl text-gray-500 p-2 flex justify-between border-solid border-2">
                     <div class="flex flex-col space-y-4">
                         <div class="text-base font-semibold">PROJECT SUMMARY</div>
                         <div class="text-xl">{{ project.items.length }}</div>
@@ -64,7 +64,7 @@ onMounted(async () => {
                         <UIcon name="i-solar-folder-2-bold" class="w-12 h-12" />
                     </div>
                 </div>
-                <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between drop-shadow-xl">
+                <div class="w-72 h-32  rounded-xl text-gray-500 p-2 flex justify-between border-solid border-2">
                     <div class="flex flex-col space-y-4">
                         <div class="text-base font-semibold">MODULE SUMMARY</div>
                         <div class="text-xl">{{ module.items.length }}</div>
@@ -73,7 +73,7 @@ onMounted(async () => {
                         <UIcon name="i-solar-folder-2-bold" class="w-12 h-12" />
                     </div>
                 </div>
-                <div class="w-72 h-32 bg-white rounded-xl text-gray-500 p-2 flex justify-between drop-shadow-xl">
+                <div class="w-72 h-32  rounded-xl text-gray-500 p-2 flex justify-between border-solid border-2">
                     <div class="flex flex-col space-y-4">
                         <div class="text-base font-semibold">CONTENT SUMMARY</div>
                         <div class="text-xl">{{ content.items.length }}</div>
@@ -110,7 +110,7 @@ onMounted(async () => {
                                         <UIcon name="i-heroicons-chevron-right-20-solid" :class="[open && 'rotate-90']" />
                                     </template>
                                     <div class="flex space-x-[.5rem] w-full">
-                                        <div class="flex justify-between w-full items-center">
+                                        <div class="flex justify-between border-solid border-2 w-full items-center">
                                             <div class="truncate">
                                                 {{ module.name }}
                                             </div>

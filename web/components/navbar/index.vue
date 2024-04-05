@@ -30,13 +30,13 @@ const items = [
 </script>
 
 <template>
-    <div class="h-12 p-4 w-full flex justify-between  items-center space-x-4 group">
+    <div class="h-12 p-4 w-full flex justify-between  items-center space-x-4 group bg-white">
         <div class="text-xl font-semibold">DASHBOARD</div>
         <div class="flex items-center space-x-4">
             <UIcon name="i-solar-bell-bing-bold" class="w-8 h-8 text-primary-600 group-hover:text-primary-900" />
             <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' }, container: 'z-50' }"
                 :popper="{ placement: 'bottom-start' }">
-                <UAvatar :src="`/image/users/${slug(data.user.username)}.png`" :alt="data.user.username" />
+                <UAvatar :src="`/image/users/${slug(data.user.username)}.png`" :alt="data.user.username" class="border-2 border-solid" />
 
                 <template #account="{ item }">
                     <div class="text-left">

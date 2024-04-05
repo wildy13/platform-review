@@ -51,11 +51,11 @@ onMounted(async () => {
 <template>
     <div class="w-full">
         <div class="p-4 pt-24">
-            <div class="p-10 bg-white rounded-lg">
+            <div class="p-10 bg-white rounded-lg border-2">
                 <!-- Header -->
                 <div class="flex justify-between">
                     <div class="text-2xl font-semibold">Project/Category Management</div>
-                    <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
                         <div>
                             <UInput v-model="search" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
                                 :ui="{ icon: { trailing: { pointer: '' } } }">
@@ -65,16 +65,10 @@ onMounted(async () => {
                                 </template>
                             </UInput>
                         </div>
-                        <UButton variant="ghost" @click="showCreate = true">
-                            <UIcon name="i-solar-add-square-bold"
-                                class="w-8 h-8 text-primary-600 hover:text-primary-900" />
-                            <span>add</span>
+                        <UButton @click="showCreate = true" icon="i-solar-add-square-bold" size="sm" color="primary"
+                            label="Create" :trailing="false">
                         </UButton>
-                        <UButton variant="ghost" :disabled="!selected.length" @click="showRemove = true">
-                            <UIcon name="i-solar-trash-bin-2-bold"
-                                class="w-8 h-8 text-primary-600 hover:text-red-600" />
-                                <span>remove</span>
-                        </UButton>
+                        <UButton icon="i-solar-trash-bin-2-bold" size="sm" color="red" label="Remove" :disabled="!selected.length" @click="showRemove = true" />
                     </div>
                 </div>
                 <!-- Table -->

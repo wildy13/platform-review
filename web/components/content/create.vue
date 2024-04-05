@@ -28,7 +28,6 @@ const form = ref();
 const initState = {
   name: undefined,
   project: undefined,
-  contentZip: undefined
 };
 const state = ref({ ...initState });
 
@@ -37,11 +36,9 @@ watch(() => props.show, (value) => {
 });
 
 
-const compressedTypes = ['application/zip', 'application/x-zip-compressed'];
 
 const schema = z.object({
   name: z.string(),
-  module: z.string(),
 });
 
 const {
@@ -125,23 +122,13 @@ const submit = async () => {
             <UFormGroup label="Name" name="name">
               <UInput v-model="state.name" />
             </UFormGroup>
-            <UFormGroup
-              v-if="data.user.role.name === 'user'"
-              label="Content Zip"
-              name="contentZip"
-            >
-              <Upload
-                v-model="state.contentZip"
-                accept=".zip,.rar"
-              />
-            </UFormGroup>
           </div>
 
           <template #footer>
             <div class="flex space-x-[1rem]">
               <div class="flex-1" />
               <UButton label="Close" color="white" @click="close" />
-              <UButton label="Save" :loading="status === 'pending'" type="submit" />
+              <UButton color="primary" label="Save" :loading="status === 'pending'" type="submit" />
             </div>
           </template>
         </UCard>

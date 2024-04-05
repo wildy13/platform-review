@@ -32,30 +32,29 @@ export const useContentStore = defineStore('content', () => {
     return res;
   }
 
+  async function upload (body) {
+    const {
+      contentZip, ...rest
+    } = body;
+
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(rest));
+    formData.append('content', contentZip);
+    const res = await alovaInstance.Post('/api/content/upload', formData, {
+      headers: {
+        Authorization: token.value,
+      },
+      enableUpload: true,
+    }).send();
+    this.items.push(res);
+
+    return res;
+  }
   async function create(body) {
-    if (data.value.user.role.name === 'admin') {
-      const res = await alovaInstance.Post('/api/content/', body, { headers }).send();
-      this.items.push(res);
+    const res = await alovaInstance.Post('/api/content/', body, { headers }).send();
+    this.items.push(res);
 
-      return res;
-    } else if (data.value.user.role.name != 'admin') {
-      const {
-        contentZip, ...rest
-      } = body;
-
-      const formData = new FormData();
-      formData.append('data', JSON.stringify(rest));
-      formData.append('content', contentZip);
-      const res = await alovaInstance.Post('/api/content/', formData, {
-        headers: {
-          Authorization: token.value,
-        },
-        enableUpload: true,
-      }).send();
-      this.items.push(res);
-
-      return res;
-    }
+    return res;
   }
 
   async function update(body) {
@@ -92,6 +91,6 @@ export const useContentStore = defineStore('content', () => {
   }
 
   return {
-    items, getAll, create, update, remove,
+    items, getAll, create, update, remove,upload
   };
 });

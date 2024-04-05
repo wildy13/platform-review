@@ -20,6 +20,9 @@ export default defineAppConfig({
         black: {
           solid: 'shadow-sm text-black hover:text-white  bg-primary-500 hover:bg-primary-500 disabled:bg-primary-950 focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500',
         },
+        white: {
+          solid: 'text-[#6B7280] bg-white'
+        }
       },
       default: {
         color: 'black',

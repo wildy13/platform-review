@@ -7,10 +7,6 @@ const props = defineProps({
         type: Boolean,
         required: true,
     },
-    data: {
-        type: Object,
-        required: true,
-    },
 });
 
 const emit = defineEmits(['close']);
@@ -22,12 +18,23 @@ const isOpen = ref(false);
 const form = ref();
 
 const state = ref({
-    bio: undefined,
+    newPassword: undefined,
+    confNewPassword: undefined,
+    oldPassword: undefined,
 });
 
 const schema = z.object({
-    bio: z.string(),
+    newPassword: z.string().refine((password) => {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\[\]{};':"\\|,.<>\\/?]).{8,}$/.test(password);
+    }, 'New password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one special character'),
+    confNewPassword: z.string(),
+    oldPassword: z.string(),
+}).refine((data) => data.newPassword === data.confNewPassword, {
+    message: "New Passwords don't match",
+    path: ["confNewPassword"],
 });
+
+
 
 watch(() => [props.show, props.data], ([showValue, dataValue]) => {
     isOpen.value = showValue;
@@ -38,7 +45,7 @@ const {
     status,
     error,
     execute,
-} = useLazyAsyncData(() => store.profile(state.value), {
+} = useLazyAsyncData(() => store.changePassword(state.value), {
     immediate: false,
 });
 
@@ -56,14 +63,14 @@ const submit = async () => {
 
         toast.add({
             title: 'Done',
-            description: 'Data has been updated successfully',
+            description: 'Data has been saved successfully',
             icon: 'i-solar-check-circle-linear',
-            color: 'green',
         });
     }
 
     return null;
 };
+
 </script>
 
 <template>
@@ -74,17 +81,24 @@ const submit = async () => {
                     <template #header>
                         <div class="flex items-center justify-between">
                             <div class="text-base">
-                                Edit Pofile
+                                Change Password
                             </div>
-                            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1" @click="close" />
+                            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark" class="-my-1"
+                                @click="close" />
                         </div>
                     </template>
 
                     <div class="flex flex-col space-y-[2rem]">
                         <ErrorHandler v-if="error" :error="error?.message" />
 
-                        <UFormGroup label="Bio" name="bio">
-                            <UInput v-model="state.bio" />
+                        <UFormGroup label="Old Password" name="oldPassword">
+                            <UInput v-model="state.oldPassword" />
+                        </UFormGroup>
+                        <UFormGroup label="New Password" name="newPassword">
+                            <UInput v-model="state.newPassword" />
+                        </UFormGroup>
+                        <UFormGroup label="Confirm New Password" name="confNewPassword">
+                            <UInput v-model="state.confNewPassword" />
                         </UFormGroup>
 
                     </div>

@@ -51,7 +51,7 @@ const {
   status,
   error,
   execute,
-} = useLazyAsyncData(() => content.create(state.value), {
+} = useLazyAsyncData(() => content.upload(state.value), {
   immediate: false,
 });
 
@@ -95,7 +95,7 @@ const submit = async () => {
 
           <div class="flex flex-col space-y-[2rem]">
             <ErrorHandler v-if="error" :error="error?.message" />
-            <UFormGroup v-if="data.user.role.name === 'user'" label="Content Zip" name="contentZip">
+            <UFormGroup v-if="data.user.role.name === 'users'" label="Content Zip" name="contentZip">
               <Upload v-model="state.contentZip" accept=".zip,.rar" />
             </UFormGroup>
           </div>
