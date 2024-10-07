@@ -18,7 +18,7 @@ const {
     pending,
     error,
     execute,
-} = useLazyAsyncData(() => Promise.all([roles.getAll(), users.getAll(), project.getAll(), module.getAll()]), {
+} = useLazyAsyncData(() => Promise.all([roles.getAll(), users.getAll(), project.getAll(), module.getAll(), logs.getAll()]), {
     immediate: false,
 });
 

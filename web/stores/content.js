@@ -6,6 +6,7 @@ export const useContentStore = defineStore('content', () => {
   const config = useRuntimeConfig();
   const { data } = useAuth();
   const { token } = useAuth();
+  const { socket } = useSocket();
   const headers = {
     Authorization: token.value,
     'Content-Type': 'application/json;charset=UTF-8',
@@ -52,6 +53,7 @@ export const useContentStore = defineStore('content', () => {
   }
   async function create(body) {
     const res = await alovaInstance.Post('/api/content/', body, { headers }).send();
+    socket.emit('logs-content:create', body, data.value.user);
     this.items.push(res);
 
     return res;
@@ -71,6 +73,7 @@ export const useContentStore = defineStore('content', () => {
       },
       enableUpload: true,
     }).send();
+    socket.emit('logs-content:update', rest, data.value.user);
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 

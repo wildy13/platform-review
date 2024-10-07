@@ -36,7 +36,7 @@ export const getAll = async (req, res) => {
 
 export const create = async (req, res) => {
     try {
-        const { name, project, module, status } = req.body;
+        const { name, module, status } = req.body;
         const newContent = new Content({
             name, slug: slug(name), module, status
         });

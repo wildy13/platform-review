@@ -6,6 +6,7 @@ export const useModuleStore = defineStore('module', () => {
   const config = useRuntimeConfig();
 
   const { token } = useAuth();
+  const { socket } = useSocket();
   const headers = {
     Authorization: token.value,
     'Content-Type': 'application/json;charset=UTF-8',
@@ -46,6 +47,9 @@ export const useModuleStore = defineStore('module', () => {
       },
       enableUpload: true,
     }).send();
+
+    socket.emit('logs-module:create', rest);
+
     this.items.push(res);
 
     return res;
@@ -53,6 +57,8 @@ export const useModuleStore = defineStore('module', () => {
 
   async function update(body) {
     const res = await alovaInstance.Put(`/api/module/${body._id}`, body, { headers }).send();
+    socket.emit('logs-module:update', body);
+
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 

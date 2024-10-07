@@ -76,7 +76,7 @@ export const remove = async (req, res) => {
         await Promise.all(
             req.body.map(async (v) => {
                 const item = await Projects.findById(v._id);
-                await rmdir(join(publicFolder, item.slug), { recursive: true });
+                await rmdir(join(publicFolder,'digital-content', item.slug), { recursive: true });
 
                 await Projects.findOneAndDelete({ _id: v._id });
             })

@@ -1,7 +1,13 @@
 <script setup>
 import { useProjectStore } from '../../stores/projects';
+import { useLogStore } from '../../stores/logs';
 
 const store = useProjectStore();
+/* const logs = useLogStore();
+const { socket } = useSocket(); */
+
+/* socket.off() */
+/* logs.getAll(); */
 
 const search = ref('');
 const showCreate = ref(false);
@@ -11,6 +17,7 @@ const selected = ref([]);
 const itemData = ref({});
 const page = ref(1);
 const pageCount = ref(10);
+
 
 const columns = [{
     key: 'index',
@@ -53,11 +60,15 @@ onMounted(async () => {
         <div class="p-4 pt-24">
             <div class="p-10 bg-white rounded-lg border-2">
                 <!-- Header -->
-                <div class="flex justify-between">
+                <div class="flex justify-between"><!-- 
+                    <div v-for="item in logs.logs" :key="item._id">
+                        {{ item.message }}
+                    </div> -->
                     <div class="text-2xl font-semibold">Project/Category Management</div>
                     <div class="flex items-center space-x-4">
                         <div>
-                            <UInput v-model="search" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
+                            <UInput v-model="search" placeholder="Search..."
+                                icon="i-heroicons-magnifying-glass-20-solid"
                                 :ui="{ icon: { trailing: { pointer: '' } } }">
                                 <template #trailing>
                                     <UButton v-show="search !== ''" color="gray" variant="link"
@@ -68,7 +79,8 @@ onMounted(async () => {
                         <UButton @click="showCreate = true" icon="i-solar-add-square-bold" size="sm" color="primary"
                             label="Create" :trailing="false">
                         </UButton>
-                        <UButton icon="i-solar-trash-bin-2-bold" size="sm" color="red" label="Remove" :disabled="!selected.length" @click="showRemove = true" />
+                        <UButton icon="i-solar-trash-bin-2-bold" size="sm" color="red" label="Remove"
+                            :disabled="!selected.length" @click="showRemove = true" />
                     </div>
                 </div>
                 <!-- Table -->
@@ -80,8 +92,8 @@ onMounted(async () => {
                     </template>
                     <template #actions-data="{ row }">
                         <div class="flex space-x-[1rem]">
-                            <UButton icon="i-solar-pen-2-linear" size="xs" variant="ghost" color="gray" :padded="false" label="edit"
-                            @click="editDialog(row)" />
+                            <UButton icon="i-solar-pen-2-linear" size="xs" variant="ghost" color="gray" :padded="false"
+                                label="edit" @click="editDialog(row)" />
                         </div>
                     </template>
                 </UTable>

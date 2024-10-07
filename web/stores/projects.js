@@ -5,7 +5,8 @@ import GlobalFetch from 'alova/GlobalFetch';
 export const useProjectStore = defineStore('project', () => {
   const config = useRuntimeConfig();
 
-  const { token } = useAuth();
+  const { token, data } = useAuth();
+  const { socket } = useSocket();
   const headers = {
     Authorization: token.value,
     'Content-Type': 'application/json;charset=UTF-8',
@@ -34,6 +35,7 @@ export const useProjectStore = defineStore('project', () => {
 
   async function create(body) {
     const res = await alovaInstance.Post('/api/project/', body, { headers }).send();
+    socket.emit('logs-project:create', body, data.value.user);
     this.items.push(res);
 
     return res;
@@ -41,6 +43,7 @@ export const useProjectStore = defineStore('project', () => {
 
   async function update(body) {
     const res = await alovaInstance.Put(`/api/project/${body._id}`, body, { headers }).send();
+    socket.emit('logs-project:update', body, data.value.user);
     const index = this.items.findIndex((v) => v._id === res._id);
     Object.assign(this.items[index], res);
 

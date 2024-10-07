@@ -46,6 +46,13 @@ export default defineNuxtConfig({
       pages: {
         login: "/"
       },
+
+/*       endpoints: {
+        signIn: {
+          path: "/api/login",
+          method: "post"
+        },
+      }, */
       sessionDataType: {
         id: 'string',
         name: 'string',

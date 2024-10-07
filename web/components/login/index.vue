@@ -27,6 +27,7 @@ const submit = async () => {
     const { email, password } = state.value;
     await signIn('credentials', { email, password, callbackUrl: '/dashboard' });
   } catch (error) {
+    console.log(error);
     errorMessage.value = error?.response._data.message;
   }
 
